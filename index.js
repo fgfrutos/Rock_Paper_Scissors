@@ -1,4 +1,8 @@
-const options = ["rock", "paper", "scissors"];
+// Global variables
+const options = ["Rock", "Paper", "Scissors"];
+let counter = [0, 0];
+
+// Game Functionalinity
 function getComputerChoice() {
     let index = Math.floor(Math.random() * 3);
     return options[index];
@@ -6,59 +10,75 @@ function getComputerChoice() {
 
 function round(playerSelection, computerSelection) {
     if (playerSelection === computerSelection) {
-        console.log("Tie game!");
-        return 0;
+        return 'Tie game!';
     }
-    else if (playerSelection === options[0] && computerSelection === options[1]) {
-        console.log('You lose...');
-        return -1;
+    else if ((playerSelection === options[0] && computerSelection === options[1]) ||
+    (playerSelection === options[1] && computerSelection === options[2]) ||
+    (playerSelection === options[2] && computerSelection === options[0])) {
+        counter[1]++;
+        return 'Ouch! That hurts!';
     }
-    else if (playerSelection === options[1] && computerSelection === options[0]) {
-        console.log('You Win!');
-        return 1;
-    } 
-    else if (playerSelection === options[1] && computerSelection === options[2]) {
-        console.log('You lose...');
-        return -1;
-    } 
-    else if (playerSelection === options[2] && computerSelection === options[1]) {
-        console.log('You Win!');
-        return 1;
-    } 
-    else if (playerSelection === options[2] && computerSelection === options[0]) {
-        console.log('You lose...');
-        return -1;
-    } 
     else {
-        console.log('You Win!');
-        return 1;
+        counter[0]++;
+        return "That's a hit!";
     }
+}
+
+function clearWind() {
+    counterUI.textContent = `${counter[0]} - ${counter[1]}`;
+    battleText.textContent = 'Prepare to fight!';
+    [weapons[0].textContent, weapons[1].textContent] = ['', ''];
+    vs.style.visibility = 'hidden';
+    modal.classList.remove('show-modal');
+}
+
+function restart() {
+    modal.classList.add('show-modal');
+    restartBtn.addEventListener('click', () => {
+        counter.forEach((c, i) => {
+            counter[i] = c - c;
+        });
+        clearWind();
+    });
 }
 
 // This function plays the game
-function game() {
-    let playerSelection, computerSelection;
-    let counter = 0;
-    for (var i = 0; i < 5; i++) {
-        let inOptions = -1;
-        computerSelection = getComputerChoice(); 
-        // Allow to handel bad responses
-        while (inOptions < 0) {
-            playerSelection = prompt("Make your choice: ").toLowerCase();
-            inOptions = options.indexOf(playerSelection);
+function game(playerSelection) {
+    if (counter[0] < 5 && counter[1] < 5){
+        let computerSelection = getComputerChoice();
+        vs.style.visibility = 'visible';
+        [weapons[0].textContent, weapons[1].textContent] = [playerSelection, computerSelection];
+        battleText.textContent = round(playerSelection, computerSelection);
+        counterUI.textContent = `${counter[0]} - ${counter[1]}`
+        if (counter[0] === 5) {
+            result.textContent = 'You Win!'; 
+            restart();
         }
-        console.log(`${playerSelection} vs ${computerSelection}`)
-        counter += round(playerSelection, computerSelection);
-    }
-    if (counter > 0) {
-        console.log('Congratulations, you are the winner!');
-    }
-    else if (counter < 0) {
-        console.log('Sorry, you lose...')
-    }
-    else {
-        console.log('The game ended in a draw.')
+        else if (counter[1] === 5) {
+            result.textContent = 'You lose...'; 
+            restart();
+        }
     }
 }
 
-game()
+// UI
+let mainUI = document.getElementById('game');
+let buttons = document.querySelectorAll('#selection > button');
+let counterUI = document.getElementById('counter');
+let weapons = document.querySelectorAll('.weapon');
+let vs = document.getElementById('vs');
+let battleText = document.getElementById('text');
+let selection = document.getElementById('selection');
+
+// Modal elements
+const modal = document.querySelector('.modal');
+const result = document.getElementById('result');
+const restartBtn = document.getElementById('restart');
+
+// Game Functionality
+buttons = Array.from(buttons);
+buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+        game(button.dataset.value);
+    })
+});

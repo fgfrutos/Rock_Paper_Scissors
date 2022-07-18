@@ -4,10 +4,30 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="index.js"></script>
+    <script src="index.js" defer></script>
+    <link href="style.css" rel="stylesheet" type="text/css">
     <title>Rock Paper Scissors</title>
 </head>
 <body>
-    
+    <h1>Rock Papper Scissors</h1> 
+    <div id="counter"> 0 - 0 </div>
+    <div id="battleground">
+        <div class="weapon"></div>
+        <p id="vs">vs</p>
+        <div class="weapon"></div>
+    </div>
+    <p id="text">Prepare to fight!</p>
+    <div id="selection">
+        <button data-value="Rock">Rock</button>
+        <button data-value="Paper">Paper</button>
+        <button data-value="Scissors">Scissors</button>
+    </div>
+    <div class="modal">
+        <div class="modal-content">
+            <p id="result"></p>
+            <p>Do you want to play again?</p>
+            <button id="restart">Restart</button>
+        </div>
+    </div>
 </body>
 </html>
